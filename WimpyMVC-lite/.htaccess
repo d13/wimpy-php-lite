@@ -1,0 +1,36 @@
+# Add this only if neccesary
+# AddType x-mapp-php5 .php
+# AddHandler x-mapp-php5 .php
+
+# Block access to config file
+<files config.json>
+order allow,deny
+deny from all
+</files>
+
+###################################################
+
+# Enable Rewriting
+
+RewriteEngine on
+
+###################################################
+
+# Ignore static assests
+
+RewriteRule \.(js|css|jpe?g|gif|png|txt|swf)$ - [L]
+
+###################################################
+
+# Add a slash to the end if missing
+
+RewriteCond %{REQUEST_URI} ^/[^\.]+[^/]$
+RewriteRule ^(.*)$ http://%{HTTP_HOST}/$1/ [R=301,L]
+
+###################################################
+
+# Re-write slashes to params
+
+RewriteRule ^([^/\.]+)/?$ /index.php?page=$1 [L]
+RewriteRule ^([^/\.]+)/([^/\.]+)/?$ /index.php?page=$1&action=$2 [L]
+RewriteRule ^([^/\.]+)/([^/\.]+)/(.*)/?$ /index.php?page=$1&action=$2&param=$3 [L]
