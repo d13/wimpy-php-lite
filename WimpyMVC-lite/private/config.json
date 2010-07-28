@@ -6,22 +6,22 @@
 	"system.logs_path":"/temp/logs",
 	
 	"system.cache_enabled":true,
-	"system.cache_path":"/temp/cache",
+	"system.cache_path":"/private/temp/cache",
 	"system.cache_ext":".cache.",
 	"system.cache_limit":"3600",
 	
 	"system.default_key":"home",
 	"system.default_template":"template.full",
 	
-	"system.controller_path":"/lib/application/controllers",
-	"system.entity_path":"/lib/application/entities",
-	"system.service_path":"/lib/application/services",
-	"system.view_path":"/lib/application/views",
-	"system.template_path":"/lib/application/views/template",
+	"system.controller_path":"/private/application/controllers",
+	"system.entity_path":"/private/application/entities",
+	"system.service_path":"/private/application/services",
+	"system.view_path":"/private/application/views",
+	"system.template_path":"/private/application/views/template",
 	
-	"datastore.content_path":"/datastore/content",
-	"datastore.material_path":"/datastore/materials",
-	"datastore.users_path":"/datastore/users",
+	"datastore.content_path":"/private/datastore/content",
+	"datastore.material_path":"/private/datastore/materials",
+	"datastore.users_path":"/private/datastore/users",
 	
 	"controllers.home":["HomeController",false],
 	"controllers.admin":["AdminController",false],
