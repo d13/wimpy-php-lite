@@ -1,0 +1,25 @@
+{
+	"controllers.home":["HomeController",false],
+	"controllers.admin":["AdminController",false],
+	"controllers.assets":["AssetsController",true],
+	"controllers.login":["LoginController",false],
+	"controllers.error":["ErrorController",false],
+	
+	"views.blank":"/blank.html",
+	"views.home":"/home.html",
+	"views.error":"/error.html",
+	
+	"views.template.full":"/template/full.html",
+	"views.template.lite":"/template/lite.html",
+	"views.template.blank":"/template/blank.html",
+	"views.template.header":"/common/header.html",
+	"views.template.nav":"/common/navigation.html",
+	"views.template.footer":"/common/footer.html",
+	
+	"data.mysql.host":"db2109.perfora.net",
+	"data.mysql.database":"db301826798",
+	"data.mysql.user":"dbo301826798",
+	"data.mysql.password":"101001celes",
+	
+	"dao.Customer":["CustomerDAO","CustomerDAOImpl"]
+}
