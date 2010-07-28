@@ -1,0 +1,49 @@
+{
+	"system.base_dir":"/kunden/homepages/12/d219616301/htdocs/jshelp/dev",
+	
+	"system.logs_enabled":true,
+	"system.logs_level":"0",
+	"system.logs_path":"/temp/logs",
+	
+	"system.cache_enabled":true,
+	"system.cache_path":"/temp/cache",
+	"system.cache_ext":".cache.",
+	"system.cache_limit":"3600",
+	
+	"system.default_key":"home",
+	"system.default_template":"template.full",
+	
+	"system.controller_path":"/lib/application/controllers",
+	"system.entity_path":"/lib/application/entities",
+	"system.service_path":"/lib/application/services",
+	"system.view_path":"/lib/application/views",
+	"system.template_path":"/lib/application/views/template",
+	
+	"datastore.content_path":"/datastore/content",
+	"datastore.material_path":"/datastore/materials",
+	"datastore.users_path":"/datastore/users",
+	
+	"controllers.home":["HomeController",false],
+	"controllers.admin":["AdminController",false],
+	"controllers.assets":["AssetsController",true],
+	"controllers.login":["LoginController",false],
+	"controllers.error":["ErrorController",false],
+	
+	"views.blank":"/blank.html",
+	"views.home":"/home.html",
+	"views.error":"/error.html",
+	
+	"views.template.full":"/template/full.html",
+	"views.template.lite":"/template/lite.html",
+	"views.template.blank":"/template/blank.html",
+	"views.template.header":"/common/header.html",
+	"views.template.nav":"/common/navigation.html",
+	"views.template.footer":"/common/footer.html",
+	
+	"data.mysql.host":"db2109.perfora.net",
+	"data.mysql.database":"db301826798",
+	"data.mysql.user":"dbo301826798",
+	"data.mysql.password":"101001celes",
+	
+	"dao.Customer":["CustomerDAO","CustomerDAOImpl"]
+}
