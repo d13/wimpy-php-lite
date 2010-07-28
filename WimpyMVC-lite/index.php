@@ -10,7 +10,7 @@ if (!isset($_SESSION['initiated'])) {
 }
 
 // Include Library
-array_walk(glob('./system/library/*.php'),create_function('$v,$i', ' return require_once($v);'));
+array_walk(glob('./private/system/library/*.php'),create_function('$v,$i', ' return require_once($v);'));
 
 // Load properties
 Config::load();
