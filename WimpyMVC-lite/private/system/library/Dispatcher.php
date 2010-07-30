@@ -38,6 +38,7 @@ class Dispatcher {
 			self::$log->write("Dispatcher > initialize :: param: NONE");
 		}
 		self::process($req_key,$req_action,$req_param);
+		self::$log->write("ENDING REQUEST ****************************************** ");
 		exit();
 	}
 	public static function process($req_key,$req_action=NULL,$req_param=NULL) {
@@ -109,10 +110,15 @@ class Dispatcher {
 			self::$log->write("Dispatcher > loadController > class: $objArr[0]",1);
 			require_once($filename);
 			$obj = new $objArr[0];
-		} else { // No controller found
+		} else if ($req_key != "error") { // No controller found
 			self::$log->write("Dispatcher > loadController > key: $req_key has no controller",1);
 			$buffer = self::load("error");
+		} else { 
+			self::$log->write("Dispatcher > loadController > cannot load: $req_key");
+			self::$log->write("FAILING REQUEST ****************************************** ");
+			die("Request cannot be processed"); 
 		}
+		
 		$buffer = "";
 		if (!empty($obj)) {
 			$isCachable = $objArr[1];
