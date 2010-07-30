@@ -1,9 +1,7 @@
 {
-	"system.base_dir":"/kunden/homepages/12/d219616301/htdocs/jshelp/dev",
-	
 	"system.logs_enabled":true,
 	"system.logs_level":"0",
-	"system.logs_path":"/temp/logs",
+	"system.logs_path":"/private/temp/logs",
 	
 	"system.cache_enabled":true,
 	"system.cache_path":"/private/temp/cache",
