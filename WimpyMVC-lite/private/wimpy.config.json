@@ -15,7 +15,6 @@
 	"system.entity_path":"/private/application/entities",
 	"system.service_path":"/private/application/services",
 	"system.view_path":"/private/application/views",
-	"system.template_path":"/private/application/views/template",
 	
 	"datastore.content_path":"/private/datastore/content",
 	"datastore.material_path":"/private/datastore/materials",
