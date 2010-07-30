@@ -1,7 +1,7 @@
 <?php
 
 class DAOFactory {
-	public static function getDAO ($domain) {
+	public static function getDAOInstance ($domain) {
 		$log = Log::getInstance();
 		$dao_ref = Config::getDao($domain);
 		$dao_int_path = DAO_PATH."/$dao_ref[0].php";
