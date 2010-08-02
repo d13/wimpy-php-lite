@@ -1,4 +1,6 @@
 {
+	"system.smarty_path":"/private/smarty",
+	
 	"system.logs_enabled":true,
 	"system.logs_level":"0",
 	"system.logs_path":"/private/temp/logs",
@@ -9,6 +11,7 @@
 	"system.cache_limit":"3600",
 	
 	"system.default_key":"home",
+	"system.default_action":"execute",
 	"system.default_template":"template.full",
 	
 	"system.controller_path":"/private/application/controllers",
