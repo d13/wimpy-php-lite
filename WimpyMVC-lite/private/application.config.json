@@ -5,16 +5,11 @@
 	"controllers.login":["LoginController",false],
 	"controllers.error":["ErrorController",false],
 	
-	"views.blank":"view.blank.html.tpl",
-	"views.home":"view.home.html.tpl",
-	"views.error":"view.error.html.tpl",
-	
-	"views.template.full":"template.full.html.tpl",
-	"views.template.lite":"template.lite.html.tpl",
-	"views.template.blank":"template.blank.html.tpl",
-	"views.template.header":"common.header.html.tpl",
-	"views.template.nav":"common.navigation.html.tpl",
-	"views.template.footer":"common.footer.html.tpl",
+	"views.home":{
+		"view":"view.home.html.tpl",
+		"extends":"template.blank.html.tpl",
+		"type":"html"
+	},
 	
 	"data.db.artsystem":{"host":"db2109.perfora.net",
 						 "database":"db301826798",
