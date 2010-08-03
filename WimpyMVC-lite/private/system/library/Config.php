@@ -47,9 +47,6 @@ class Config {
 	public static function getView ($key) {
 		return self::get("views.$key");
 	}
-	public static function getViewPath ($key) {
-		return VIEW_PATH.self::getView($key);
-	}
 	public static function getDao ($key) {
 		return self::get("dao.$key");
 	}

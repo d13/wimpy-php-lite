@@ -47,7 +47,20 @@ class Model {
 		self::clearGlobalValues();
 	}
 	
-	public static function getAllValues () { //TODO: What happens with duplicates?
-		return array_merge(self::$vars,$_SESSION['global']);
+	public static function getAllValues () { //TODO: Prepend local_ & global_
+		$all_values = array();
+		$global = $_SESSION['global'];
+		if(!empty($global)) {
+			foreach($global as $key => $value){
+				$all_values["global_$key"] = $value;
+			}
+		}
+		$local = self::$vars;
+		if(!empty($local)) {
+			foreach($local as $key => $value){
+				$all_values["local_$key"] = $value;
+			}
+		}
+		return $all_values;
 	}
 } 

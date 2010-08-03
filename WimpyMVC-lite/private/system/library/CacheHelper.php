@@ -1,46 +1,43 @@
 <?php
 
 class CacheHelper {
-	public static function makeFileName ($req_key,$req_action,$req_param_list) {
+	public static function makeFileName ($file_type) {
 		$log = Log::getInstance();
-		$cache_file = $req_key;
-		if (!empty($req_action)) {
-			$cache_file .= "-".$req_action;
-		}
-		if (!empty($req_param_list)) {
-			$req_param = implode("-", $req_param_list);
-			$req_param = substr($req_param, 0,-1); // Get rid of extra "-"
-			$log->write("CacheHelper > makeFileName - imploded params: ".$req_param);
-			$cache_file .= "-".$req_param;
-		}
+		$cache_file = self::makeFileNameFromUrl($url);
 		$cache_file .= CACHE_EXT;
-		if (strpos($cache_file,"get_styles") > -1) {
+		if ($file_type == "css") {
 			$cache_file .= "css";
-		} else if (strpos($cache_file,"get_scripts") > -1) {
+		} else if ($file_type == "js") {
 			$cache_file .= "js";
 		} else {
-			$cache_file .= "txt";
+			$cache_file .= "html";
 		}
 		
 		return $cache_file;
 	}
-	public static function makeFileNameFromUrl ($req_key,$req_action=NULL,$req_param=NULL) {
-		if (empty($req_param)) {
-			$req_param_list = NULL;
-		} else {
-			$req_param_list = array();
-			$req_param_list = explode("/",$req_param);
+	public static function makeFileNameFromUrl () {
+		$file_name = $_SERVER["SERVER_NAME"];
+		if ($_SERVER["REQUEST_URI"] != "/") {
+			$file_name.=$_SERVER["REQUEST_URI"];
 		}
-		return self::makeFileName($req_key, $req_action, $req_param_list);
+		$file_name = str_replace("/","-",$file_name);
+		return $file_name;
 	}
-	public static function saveView ($buffer,$key,$action=NULL,$params=NULL) {
+	public static function findFileFromUrl () {
+		$directory = CACHE_PATH;
+		$file_name = self::makeFileNameFromUrl();
+		
+		$full_file_path = $file_name;
+		return $full_file_path;
+	}
+	public static function saveView ($result,$file_type) {
 		$log = Log::getInstance();
-		if (!empty($key) && !empty($key)) {
-			$filename = self::makeFileName($key, $action, $params);
+		if (!empty($result) && !empty($result)) {
+			$filename = self::makeFileName($file_type);
 			$log->write("CacheHelper > cacheView - filename: ".$filename);
-			self::write($filename,$buffer);
+			self::write($filename,$result);
 		} else {
-			$log->write("CacheHelper > cacheView - filename: NO KEY PRESENT");
+			$log->write("CacheHelper > cacheView - filename: NO CONTENT PRESENT");
 		}
 	}
 	private static function write ($filename,$buffer) {

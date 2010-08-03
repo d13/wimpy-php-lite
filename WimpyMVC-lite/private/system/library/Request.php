@@ -30,6 +30,7 @@ class Request {
 			//self::$log->write("Request > loadData : no get data");
 		}
 	}
+	// TODO: Actually clean the strings
 	private static function clean ($str) {
 		$strVal = $str;
 		

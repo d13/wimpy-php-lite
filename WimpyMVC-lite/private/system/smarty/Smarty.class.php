@@ -251,11 +251,18 @@ class Smarty extends Smarty_Internal_Data {
         if (!empty($this->exception_handler))
             set_exception_handler($this->exception_handler); 
         // set default dirs
+/*		FOR BACKUP
         $this->template_dir = array('.' . DS . 'templates' . DS);
         $this->compile_dir = '.' . DS . 'templates_c' . DS;
         $this->plugins_dir = array(SMARTY_PLUGINS_DIR);
         $this->cache_dir = '.' . DS . 'cache' . DS;
         $this->config_dir = '.' . DS . 'configs' . DS;
+*/
+        $this->template_dir = array(VIEW_PATH);
+        $this->compile_dir = SMARTY_COMPILE_PATH;
+        $this->plugins_dir = array(SMARTY_PLUGINS_DIR);
+        $this->cache_dir = SMARTY_CACHE_PATH;
+        $this->config_dir = SMARTY_VIEW_CFG_PATH;
         $this->debug_tpl = SMARTY_DIR . 'debug.tpl';
         if (!$this->debugging && $this->debugging_ctrl == 'URL') {
             if (isset($_SERVER['QUERY_STRING'])) {

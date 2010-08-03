@@ -1,6 +1,4 @@
 {
-	"system.smarty_path":"/private/smarty",
-	
 	"system.logs_enabled":true,
 	"system.logs_level":"0",
 	"system.logs_path":"/private/temp/logs",
@@ -18,6 +16,11 @@
 	"system.entity_path":"/private/application/entities",
 	"system.service_path":"/private/application/services",
 	"system.view_path":"/private/application/views",
+	
+	"system.smarty_path":"/private/system/smarty",
+	"system.smarty_cache_path":"/private/temp/sm_cache",
+	"system.smarty_compile_path":"/private/temp/sm_template_c",
+	"system.smarty_view_cfg_path":"/private/application/view_configs",
 	
 	"datastore.content_path":"/private/datastore/content",
 	"datastore.material_path":"/private/datastore/materials",

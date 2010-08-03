@@ -25,8 +25,8 @@ class Dispatcher {
 			$req_action = Request::$get["action"];
 			self::$log->write("Dispatcher > initialize :: action: $req_action");
 		} else {
-			$req_action = NULL;
-			self::$log->write("Dispatcher > initialize :: action: NONE");
+			$req_action = DEFAULT_ACTION;
+			self::$log->write("Dispatcher > initialize :: default action: $req_action");
 		}
 		
 		// SET PARAM
@@ -48,30 +48,53 @@ class Dispatcher {
 		}
 		Model::clearLocalValues();
 	}
-	public static function load($req_key,$req_action=NULL,$req_param=NULL) {
+	public static function load($req_key,$req_action=DEFAULT_ACTION,$req_param=NULL) {
 		self::$log->write("Dispatcher > load :: args: $req_key - $req_action - $req_param",1);
 		
 		self::$log->write("Dispatcher > load :: request method is ".$_SERVER['REQUEST_METHOD'],1);
+
+		// TODO: Do cache check from smarty
 		if(CACHE_ENABLED && ($_SERVER['REQUEST_METHOD'] == "GET")) {
 			self::$log->write("Dispatcher > load :: caching is on",1);
 			$result = self::loadFromCache($req_key,$req_action,$req_param);
+			$file_type = "html";
 		} else {
-			self::$log->write("Dispatcher > load :: caching is off",1);
+			self::$log->write("Dispatcher > load :: caching is not available",1);
 		}
 		if (empty($result) ||  strlen($result) < 1) { 
 			self::$log->write("Dispatcher > load :: loading from controller",1);
-			$result = self::loadFromController($req_key,$req_action,$req_param);
+			// TODO: viewInfo will be .tpl to consume, file type
+			$viewInfo = self::loadFromController($req_key,$req_action,$req_param);
+			$tpls = $viewInfo[0];
+			//$tpls = $viewInfo;
+			$model_list = Model::getAllValues();
+			$file_type = $viewInfo[1];
+			//$file_type = "html";
+			// TODO: var result will be a string from smarty->get using .tpl
+			$result = SmartyHelper::getFinalView($tpls,$model_list);
+			if (CACHE_ENABLED && !empty($result) ||  strlen($result) > 0) {
+				CacheHelper::saveView($result,$file_type);
+			}
 		}
-		Response::clearBuffer();
-		return $result;
+		
+		//TODO: Set content type based on file type from viewInfo (ie. css is text/css) 
+		if ($file_type == "css") {
+			header("Content-type: text/css");
+			self::$log->write("CACHE FILE IS CSS",2);
+		} else if ($file_type == "js") {
+			header("Content-type: text/javascript");
+			self::$log->write("CACHE FILE IS JS",2);
+		}
+		
+		return $result; // returns a string from smarty
 	}
 	private static function loadFromCache ($req_key,$req_action,$req_param) {
-		$cache_file = CacheHelper::makeFileNameFromUrl($req_key, $req_action, $req_param);
-		$cache_file_path = CACHE_PATH.'/'.$cache_file;
+		$cache_file_path = CacheHelper::findFileFromUrl();
+		$cache_file = $cache_file_path;
 		self::$log->write("Dispatcher > loadFromCache :: filename: $cache_file");
 		self::$log->write("Dispatcher > loadFromCache :: filename w path: $cache_file_path",1);
 		$time = time();
-		$file_exists = file_exists($cache_file_path);
+		$file_exists = (empty($cache_file_path) ? FALSE : file_exists($cache_file_path));
 		if ($file_exists) {
 			$time_diff = $time - filemtime($cache_file_path);
 			$time_diff_ok = ($time_diff < CACHE_LIMIT) ? TRUE : FALSE;
@@ -82,16 +105,6 @@ class Dispatcher {
 		if ($time_diff_ok) {
 			self::$log->write("Dispatcher > loadFromCache :: Retrieving $cache_file",1);
 			$content = @file_get_contents($cache_file_path);
-			
-			$file_ext = substr($cache_file,(strlen($cache_file)-4),4);
-			self::$log->write("FILE EXT: $file_ext",2);
-			if ($file_ext == ".css") {
-				header("Content-type: text/css");
-				self::$log->write("CACHE FILE IS CSS",2);
-			} else if ($file_ext == ".js") {
-				header("Content-type: text/javascript");
-				self::$log->write("CACHE FILE IS JS",2);
-			}
 			return $content;
 		} else {
 			if ($file_exists) {
@@ -103,6 +116,8 @@ class Dispatcher {
 		}
 	}
 	private static function loadFromController ($req_key,$req_action,$req_param) {
+		$buffer = "";
+		
 		// GET CONTROLLER
 		$objArr = Config::getController($req_key);
 		$filename = CONTROLLER_PATH.'/'.$objArr[0].'.php';
@@ -119,48 +134,40 @@ class Dispatcher {
 			die("Request cannot be processed"); 
 		}
 		
-		$buffer = "";
 		if (!empty($obj)) {
 			$isCachable = $objArr[1];
-			if (!empty($req_action)) {
-				//TODO: Fix actions from underscores to camel-case
-				if(strpos($req_action,'_') != FALSE){
-					$action = Inflector::toCamelCase($req_action,'_');
-				} else { 
-					$action = $req_action; 
-				}
-				if (method_exists($obj,$action)) { 
-					if(!empty($req_param)) { // If params are passed
-						self::$log->write("Dispatcher > loadFromController -- param string: $req_param");
-						
-						$req_param_list = array();
-						$req_param_list = explode("/",$req_param);
-						for($i=0; $i < sizeof($req_param_list); ++$i) {
-							self::$log->write("Dispatcher > loadFromController -- param array > value: ".$req_param_list[$i]);
-						}
-
-						call_user_func_array(array($obj, $action),$req_param_list);
-						self::$log->write("Dispatcher > loadController :: called $req_key > $action({$req_param})");
-					} else { // Call function with no params
-						self::$log->write("Dispatcher > loadController :: calling {$req_key}->{$action}()");
-						$obj->$action();
+			if(strpos($req_action,'_') != FALSE){
+				$action = Inflector::toCamelCase($req_action,'_');
+			} else { 
+				$action = $req_action; 
+			}
+			if (method_exists($obj,$action)) { 
+				if(!empty($req_param)) { // If params are passed
+					self::$log->write("Dispatcher > loadFromController -- param string: $req_param");
+					
+					$req_param_list = array();
+					$req_param_list = explode("/",$req_param);
+					for($i=0; $i < sizeof($req_param_list); ++$i) {
+						self::$log->write("Dispatcher > loadFromController -- param array > value: ".$req_param_list[$i]);
 					}
-				} else { // If method does not exist 
-					self::$log->write("Dispatcher > loadController :: {$req_key}->{$action}() does not exist");
-					$buffer = self::load("error");
+
+					call_user_func_array(array($obj, $action),$req_param_list);
+					self::$log->write("Dispatcher > loadController :: called $req_key > $action({$req_param})");
+				} else { // Call function with no params
+					self::$log->write("Dispatcher > loadController :: calling {$req_key}->{$action}()");
+					$obj->$action();
 				}
-			}else { // Call default method
-				self::$log->write("Dispatcher > loadController :: calling {$req_key}->execute()");
-				$obj->execute();
+			} else { // If method does not exist 
+				self::$log->write("Dispatcher > loadController :: {$req_key}->{$action}() does not exist");
+				//$buffer = self::load("error");
 			}
+			
+			// TODO: get view string
+			$buffer = $obj->getViewInfo();
+			self::$log->write("view is $buffer ======================================");
 			$obj = null;
-			$buffer = Response::getBuffer();
-			if ($isCachable) {
-				$params = !empty($req_param_list) ? $req_param_list : NULL;
-				CacheHelper::saveView($buffer,$req_key,$req_action,$params);
-			}
 		}
-		
+		// TODO: Return view info for smarty to consume
 		return $buffer;
 	}
 }
