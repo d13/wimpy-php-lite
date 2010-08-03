@@ -22,7 +22,7 @@ abstract class BaseController {
 	final public function isCachable () {
 		return $this->cachable;
 	}
-	// TODO: Research sending viewInfo AND Model as Array, called getModelAndView 
+	// send views to use file type to use 
 	public function getViewInfo (){
 		$viewObj = Config::getView($this->req_key);
 		$viewData = array($viewObj["extends"],$viewObj["view"]);

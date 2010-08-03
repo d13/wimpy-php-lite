@@ -53,7 +53,6 @@ class Dispatcher {
 		
 		self::$log->write("Dispatcher > load :: request method is ".$_SERVER['REQUEST_METHOD'],1);
 
-		// TODO: Do cache check from smarty
 		if(CACHE_ENABLED && ($_SERVER['REQUEST_METHOD'] == "GET")) {
 			self::$log->write("Dispatcher > load :: caching is on",1);
 			$result = self::loadFromCache($req_key,$req_action,$req_param);
@@ -63,21 +62,24 @@ class Dispatcher {
 		}
 		if (empty($result) ||  strlen($result) < 1) { 
 			self::$log->write("Dispatcher > load :: loading from controller",1);
-			// TODO: viewInfo will be .tpl to consume, file type
+			// viewInfo will be .tpl to consume, file type
 			$viewInfo = self::loadFromController($req_key,$req_action,$req_param);
+			
+			// view and model to send to smarty
 			$tpls = $viewInfo[0];
-			//$tpls = $viewInfo;
 			$model_list = Model::getAllValues();
-			$file_type = $viewInfo[1];
-			//$file_type = "html";
-			// TODO: var result will be a string from smarty->get using .tpl
+			
+			// result will be a string from smarty->get
 			$result = SmartyHelper::getFinalView($tpls,$model_list);
+			
+			// saves result view into a file using a url.cache.type naming convention
 			if (CACHE_ENABLED && !empty($result) ||  strlen($result) > 0) {
+				$file_type = $viewInfo[1];
 				CacheHelper::saveView($result,$file_type);
 			}
 		}
 		
-		//TODO: Set content type based on file type from viewInfo (ie. css is text/css) 
+		// Set content type based on file type from viewInfo (ie. css is text/css) 
 		if ($file_type == "css") {
 			header("Content-type: text/css");
 			self::$log->write("CACHE FILE IS CSS",2);
@@ -162,12 +164,12 @@ class Dispatcher {
 				//$buffer = self::load("error");
 			}
 			
-			// TODO: get view string
+			// get view info
 			$buffer = $obj->getViewInfo();
-			self::$log->write("view is $buffer ======================================");
+			self::$log->write("view is ".$buffer[0]." ======================================");
 			$obj = null;
 		}
-		// TODO: Return view info for smarty to consume
+		// Return view info for smarty to consume
 		return $buffer;
 	}
 }

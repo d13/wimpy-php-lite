@@ -47,7 +47,7 @@ class Model {
 		self::clearGlobalValues();
 	}
 	
-	public static function getAllValues () { //TODO: Prepend local_ & global_
+	public static function getAllValues () {
 		$all_values = array();
 		$global = $_SESSION['global'];
 		if(!empty($global)) {
