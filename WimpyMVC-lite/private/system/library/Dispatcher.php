@@ -74,7 +74,7 @@ class Dispatcher {
 			$result = $viewBuilder->getFinalView($tpls,$model_list);
 			
 			// saves result view into a file using a url.cache.type naming convention
-			if (CACHE_ENABLED && !empty($result) ||  strlen($result) > 0) {
+			if (CACHE_ENABLED && (!empty($result) ||  strlen($result) > 0)) {
 				$file_type = $viewInfo[1];
 				CacheHelper::saveView($result,$file_type);
 			}
