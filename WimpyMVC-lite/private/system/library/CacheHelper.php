@@ -27,7 +27,7 @@ class CacheHelper {
 		$log = Log::getInstance();
 		$file_name = self::makeFileNameFromUrl();
 		$log->write("CacheHelper > findFileFromUrl - target starts with: ".$file_name);
-		// TODO: Look through directory for file
+		// Look through directory for file
 		if($directory = opendir(CACHE_PATH)){
 			while(FALSE !== ($name = readdir($directory))) {
 				if($name != '.' && $name != '..') {
