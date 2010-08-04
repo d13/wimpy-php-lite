@@ -1,10 +1,10 @@
 <?php
 
-class SmartyHelper {
-	public static function getFinalView ($tpls,$modelList) {
+class SmartyViewBuilder implements ViewBuilder {
+	public function getFinalView ($tplName,$modelMap) {
 		$log = Log::getInstance();
 		require(SMARTY_PATH.'/Smarty.class.php');
-		$tplStr = $tpls;
+		$tplStr = $tplName;
 		if (strpos($tplStr,"|") > -1) {
 			$tplStr = "extends:$tplStr";
 		}
@@ -13,7 +13,7 @@ class SmartyHelper {
 		$smarty->debugging = false;
 		$smarty->caching = false;
 		
-		foreach($modelList as $key => $value) {
+		foreach($modelMap as $key => $value) {
 			$smarty->assign($key,$value);
 		}
 		

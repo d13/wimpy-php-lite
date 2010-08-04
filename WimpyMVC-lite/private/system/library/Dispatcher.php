@@ -70,7 +70,8 @@ class Dispatcher {
 			$model_list = Model::getAllValues();
 			
 			// result will be a string from smarty->get
-			$result = SmartyHelper::getFinalView($tpls,$model_list);
+			$viewBuilder = ViewBuilderFactory::getViewBuilder();
+			$result = $viewBuilder->getFinalView($tpls,$model_list);
 			
 			// saves result view into a file using a url.cache.type naming convention
 			if (CACHE_ENABLED && !empty($result) ||  strlen($result) > 0) {

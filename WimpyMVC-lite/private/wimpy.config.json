@@ -17,6 +17,8 @@
 	"system.service_path":"/private/application/services",
 	"system.view_path":"/private/application/views",
 	
+	"system.plugins_path":"/private/system/plugins",
+	"system.view_builder_class":"SmartyViewBuilder",
 	"system.smarty_path":"/private/system/smarty",
 	"system.smarty_cache_path":"/private/temp/sm_cache",
 	"system.smarty_compile_path":"/private/temp/sm_template_c",
