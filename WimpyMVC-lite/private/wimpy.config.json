@@ -3,7 +3,7 @@
 	"system.logs_level":"0",
 	"system.logs_path":"/private/temp/logs",
 	
-	"system.cache_enabled":true,
+	"system.cache_enabled":false,
 	"system.cache_path":"/private/temp/cache",
 	"system.cache_ext":".cache.",
 	"system.cache_limit":"3600",

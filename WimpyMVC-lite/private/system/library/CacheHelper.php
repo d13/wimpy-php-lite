@@ -24,10 +24,25 @@ class CacheHelper {
 		return $file_name;
 	}
 	public static function findFileFromUrl () {
-		$directory = CACHE_PATH;
+		$log = Log::getInstance();
 		$file_name = self::makeFileNameFromUrl();
-		
-		$full_file_path = $file_name;
+		$log->write("CacheHelper > findFileFromUrl - target starts with: ".$file_name);
+		// TODO: Look through directory for file
+		if($directory = opendir(CACHE_PATH)){
+			while(FALSE !== ($name = readdir($directory))) {
+				if($name != '.' && $name != '..') {
+					$startsWith = substr($name,0, strpos($name,CACHE_EXT));
+					$log->write("CacheHelper > findFileFromUrl - file starts with: ".$startsWith);
+					if($file_name == $startsWith) {
+						$full_file_path = $name;
+						break;
+					}
+				}
+			}
+			closedir($directory);
+		}
+		$log->write("CacheHelper > findFileFromUrl - filename: ".$full_file_path);
+		//$full_file_path = $file_name;
 		return $full_file_path;
 	}
 	public static function saveView ($result,$file_type) {

@@ -91,8 +91,9 @@ class Dispatcher {
 		return $result; // returns a string from smarty
 	}
 	private static function loadFromCache ($req_key,$req_action,$req_param) {
-		$cache_file_path = CacheHelper::findFileFromUrl();
-		$cache_file = $cache_file_path;
+		// TODO: perform lookup for file with name matching everything minus the extension
+		$cache_file = CacheHelper::findFileFromUrl();
+		$cache_file_path = CACHE_PATH.'/'.$cache_file_path;
 		self::$log->write("Dispatcher > loadFromCache :: filename: $cache_file");
 		self::$log->write("Dispatcher > loadFromCache :: filename w path: $cache_file_path",1);
 		$time = time();
