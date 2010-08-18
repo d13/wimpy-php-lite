@@ -65,11 +65,11 @@ class Dispatcher {
 			// viewInfo will be .tpl to consume, file type
 			$viewInfo = self::loadFromController($req_key,$req_action,$req_param);
 			
-			// view and model to send to smarty
+			// view and model to send to ViewBuilder
 			$tpls = $viewInfo[0];
 			$model_list = Model::getAllValues();
 			
-			// result will be a string from smarty->get
+			// result will be a string from ViewBuilder->getFinalView
 			$viewBuilder = ViewBuilderFactory::getViewBuilder();
 			$result = $viewBuilder->getFinalView($tpls,$model_list);
 			
