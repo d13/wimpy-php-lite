@@ -11,6 +11,10 @@ class Dispatcher {
 		// Capture request data
 		Request::loadData(); // TODO: SANITIZE STRINGS
 		
+		// TODO: ReqFilter - Create a request filter to maps keys to specific actions
+		//			TODO: ReqFilter - add filter flag in wimpy config
+		//			TODO: ReqFilter - add filter mappings to app config
+		
 		// SET REQUEST KEY
 		if(!empty(Request::$get["page"])) {
 			$req_key = Request::$get["page"];
@@ -19,7 +23,6 @@ class Dispatcher {
 			$req_key = DEFAULT_KEY; // Open domain
 			self::$log->write("Dispatcher > initialize :: default map: $req_key");
 		}
-		
 		// SET ACTION NAME
 		if(!empty(Request::$get["action"])) {
 			$req_action = Request::$get["action"];
@@ -28,7 +31,6 @@ class Dispatcher {
 			$req_action = DEFAULT_ACTION;
 			self::$log->write("Dispatcher > initialize :: default action: $req_action");
 		}
-		
 		// SET PARAM
 		if(!empty(Request::$get["param"])) {
 			$req_param = Request::$get["param"];
@@ -55,8 +57,9 @@ class Dispatcher {
 
 		if(CACHE_ENABLED && ($_SERVER['REQUEST_METHOD'] == "GET")) {
 			self::$log->write("Dispatcher > load :: caching is on",1);
-			$result = self::loadFromCache($req_key,$req_action,$req_param);
-			$file_type = "html";
+			$cachedView = self::loadFromCache($req_key,$req_action,$req_param);
+			$result = $cachedView[0];
+			$file_type = $cachedView[1];
 		} else {
 			self::$log->write("Dispatcher > load :: caching is not available",1);
 		}
@@ -109,14 +112,15 @@ class Dispatcher {
 		if ($time_diff_ok) {
 			self::$log->write("Dispatcher > loadFromCache :: Retrieving $cache_file",1);
 			$content = @file_get_contents($cache_file_path);
-			return $content;
+			$endsWith = substr($cache_file, strpos($name,CACHE_EXT));
+			return array($content,$endsWith);
 		} else {
 			if ($file_exists) {
 				self::$log->write("Dispatcher > loadFromCache :: Cache is too old",1);
 			} else {
 				self::$log->write("Dispatcher > loadFromCache :: Cache file not found",1);
 			}
-			return NULL;
+			return array(NULL,'html');
 		}
 	}
 	private static function loadFromController ($req_key,$req_action,$req_param) {

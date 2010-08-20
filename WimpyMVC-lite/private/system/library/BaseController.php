@@ -25,8 +25,12 @@ abstract class BaseController {
 	// send views to use file type to use 
 	public function getViewInfo (){
 		$viewObj = Config::getView($this->req_key);
-		$viewData = array($viewObj["extends"],$viewObj["view"]);
-		$viewStr= implode("|",$viewData);
+		if (!empty($viewObj["extends"])) {
+			$viewData = array($viewObj["extends"],$viewObj["view"]);
+			$viewStr= implode("|",$viewData);
+		} else {
+			$viewStr=$viewObj["view"];
+		}
 		$viewInfo = array($viewStr,$viewObj["type"]);
 		$this->log->write("VIEW IS: ".$viewObj["view"]." +++++++++++++++++++++++++++++++++++++++++++++");
 		return $viewInfo;
