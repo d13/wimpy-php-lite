@@ -39,7 +39,7 @@ class Config {
 		return self::get("system.$key");
 	}
 	public static function getDataProp ($key) {
-		return self::get("datastore.$key");
+		return self::get("data.$key");
 	}
 	public static function getController ($key) {
 		return self::get("controllers.$key");
